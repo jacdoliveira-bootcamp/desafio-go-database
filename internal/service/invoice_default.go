@@ -1,6 +1,6 @@
 package service
 
-import "app/internal"
+import "github.com/jacdoliveira/bw7/desafio-go-database/internal"
 
 // NewInvoicesDefault creates new default service for invoice entity.
 func NewInvoicesDefault(rp internal.RepositoryInvoice) *InvoicesDefault {

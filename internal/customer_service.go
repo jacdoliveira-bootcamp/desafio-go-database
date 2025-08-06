@@ -6,4 +6,6 @@ type ServiceCustomer interface {
 	FindAll() (c []Customer, err error)
 	// Save saves a customer
 	Save(c *Customer) (err error)
+	GetTotalByCondition() (d []CustomerGetTotal, err error)
+	GetTopActive() (ma []CustomerTopActive, err error)
 }

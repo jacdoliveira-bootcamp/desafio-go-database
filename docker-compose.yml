@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - API_KEY=${API_KEY}
+      - PORT=${PORT}
+      - HOST=${HOST}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - desafio-go-database
+
+  db:
+    container_name: database
+    image: mysql/mysql-server:8.0.32-1.2.11-server
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_HOST=%
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docs/db/mysql/database.sql:/docker-entrypoint-initdb.d/01-database.sql
+      - ./docs/db/mysql/data.sql:/docker-entrypoint-initdb.d/02-data.sql
+    networks:
+      - desafio-go-database
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  desafio-go-database:
+    driver: bridge

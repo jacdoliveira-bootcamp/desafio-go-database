@@ -1,39 +1,39 @@
 package main
 
 import (
-	"app/internal/application"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal/application"
 )
 
 func main() {
-	// env
-	// ...
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Arquivo .env não encontrado ou não pôde ser carregado: %v\n", err)
+	}
 
-	// app
-	// - config
 	cfg := &application.ConfigApplicationDefault{
 		Db: &mysql.Config{
-			User:   "root",
-			Passwd: "",
+			User:   os.Getenv("DB_USER"),
+			Passwd: os.Getenv("DB_PASSWORD"),
 			Net:    "tcp",
-			Addr:   "localhost:3306",
-			DBName: "fantasy_products",
+			Addr:   fmt.Sprintf("%s:%s", os.Getenv("DB_HOST"), os.Getenv("DB_PORT")),
+			DBName: os.Getenv("DB_NAME"),
 		},
-		Addr: "127.0.0.1:8080",
+		Addr: fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT")),
 	}
+
 	app := application.NewApplicationDefault(cfg)
-	// - set up
-	err := app.SetUp()
-	if err != nil {
-		fmt.Println(err)
-		return
+
+	if err := app.SetUp(); err != nil {
+		log.Fatalf("Erro durante setup da aplicação: %v", err)
 	}
-	// - run
-	err = app.Run()
-	if err != nil {
-		fmt.Println(err)
-		return
+
+	if err := app.Run(); err != nil {
+		log.Fatalf("Erro durante execução da aplicação: %v", err)
 	}
 }

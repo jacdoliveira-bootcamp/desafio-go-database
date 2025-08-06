@@ -1,9 +1,8 @@
 package handler
 
 import (
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal"
 	"net/http"
-
-	"app/internal"
 
 	"github.com/bootcamp-go/web/request"
 	"github.com/bootcamp-go/web/response"
@@ -106,5 +105,26 @@ func (h *SalesDefault) Create() http.HandlerFunc {
 			"message": "sale created",
 			"data":    sa,
 		})
+	}
+}
+
+func (h *SalesDefault) GetTopFiveProducts() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		topProducts, err := h.sv.GetTopProducts()
+		if err != nil {
+			response.Error(
+				w,
+				http.StatusInternalServerError,
+				err.Error(),
+			)
+			return
+		}
+
+		resp := map[string]any{
+			"message": "Top 5 best-selling products",
+			"data":    topProducts,
+		}
+
+		response.JSON(w, http.StatusOK, resp)
 	}
 }

@@ -1,10 +1,9 @@
 package handler
 
 import (
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal"
 	"log"
 	"net/http"
-
-	"app/internal"
 
 	"github.com/bootcamp-go/web/request"
 	"github.com/bootcamp-go/web/response"
@@ -107,6 +106,45 @@ func (h *CustomersDefault) Create() http.HandlerFunc {
 		response.JSON(w, http.StatusCreated, map[string]any{
 			"message": "customer created",
 			"data":    cs,
+		})
+	}
+}
+
+func (h *CustomersDefault) GetTotalByCondition() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		total, err := h.sv.GetTotalByCondition()
+		if err != nil {
+			response.Error(
+				w,
+				http.StatusInternalServerError,
+				err.Error(),
+			)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "Total retrieved by condition",
+			"data":    total,
+		})
+	}
+}
+
+func (h *CustomersDefault) GetTopActives() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		topCustomers, err := h.sv.GetTopActive()
+		if err != nil {
+			response.Error(
+				w,
+				http.StatusInternalServerError,
+				"Erro ao buscar clientes mais ativos",
+			)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "Most active customers successfully recovered",
+			"data":    topCustomers,
 		})
 	}
 }

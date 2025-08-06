@@ -2,8 +2,8 @@ package repository
 
 import (
 	"database/sql"
-
-	"app/internal"
+	"fmt"
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal"
 )
 
 // NewSalesMySQL creates new mysql repository for sale.go entity.
@@ -66,4 +66,39 @@ func (r *SalesMySQL) Save(s *internal.Sale) (err error) {
 	(*s).Id = int(id)
 
 	return
+}
+
+func (r *SalesMySQL) GetTopProducts() ([]internal.SaleTopProducts, error) {
+	const query = `
+		SELECT 
+			p.description, 
+			SUM(s.quantity) AS total  
+		FROM sales s
+		INNER JOIN products p ON p.id = s.product_id
+		GROUP BY product_id
+		ORDER BY total DESC
+		LIMIT 5
+	`
+
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query top 5 products: %w", err)
+	}
+	defer rows.Close()
+
+	var products []internal.SaleTopProducts
+
+	for rows.Next() {
+		var prod internal.SaleTopProducts
+		if err := rows.Scan(&prod.Description, &prod.Total); err != nil {
+			return nil, fmt.Errorf("failed to scan top 5 product row: %w", err)
+		}
+		products = append(products, prod)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error after reading top 5 product rows: %w", err)
+	}
+
+	return products, nil
 }

@@ -1,6 +1,6 @@
 package service
 
-import "app/internal"
+import "github.com/jacdoliveira/bw7/desafio-go-database/internal"
 
 // NewProductsDefault creates new default service for product entity.
 func NewProductsDefault(rp internal.RepositoryProduct) *ProductsDefault {

@@ -6,4 +6,6 @@ type ServiceSale interface {
 	FindAll() (s []Sale, err error)
 	// Save saves a sale.
 	Save(s *Sale) (err error)
+
+	GetTopProducts() (total []SaleTopProducts, err error)
 }

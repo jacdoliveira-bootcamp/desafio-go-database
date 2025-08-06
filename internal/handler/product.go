@@ -1,9 +1,8 @@
 package handler
 
 import (
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal"
 	"net/http"
-
-	"app/internal"
 
 	"github.com/bootcamp-go/web/request"
 	"github.com/bootcamp-go/web/response"

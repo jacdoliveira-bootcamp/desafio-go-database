@@ -1,6 +1,6 @@
 package service
 
-import "app/internal"
+import "github.com/jacdoliveira/bw7/desafio-go-database/internal"
 
 // NewSalesDefault creates new default service for sale.go entity.
 func NewSalesDefault(rp internal.RepositorySale) *SalesDefault {
@@ -22,5 +22,10 @@ func (sv *SalesDefault) FindAll() (s []internal.Sale, err error) {
 // Save saves the sale.go.
 func (sv *SalesDefault) Save(s *internal.Sale) (err error) {
 	err = sv.rp.Save(s)
+	return
+}
+
+func (s *SalesDefault) GetTopProducts() (total []internal.SaleTopProducts, err error) {
+	total, err = s.rp.GetTopProducts()
 	return
 }

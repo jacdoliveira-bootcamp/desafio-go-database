@@ -2,8 +2,7 @@ package repository
 
 import (
 	"database/sql"
-
-	"app/internal"
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal"
 )
 
 // NewProductsMySQL creates new mysql repository for product entity.

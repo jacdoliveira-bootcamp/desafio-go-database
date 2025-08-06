@@ -1,10 +1,10 @@
 package application
 
 import (
-	"app/internal/handler"
-	"app/internal/repository"
-	"app/internal/service"
 	"database/sql"
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal/handler"
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal/repository"
+	"github.com/jacdoliveira/bw7/desafio-go-database/internal/service"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -95,6 +95,11 @@ func (a *ApplicationDefault) SetUp() (err error) {
 		r.Get("/", hdCustomer.GetAll())
 		// - POST /customers
 		r.Post("/", hdCustomer.Create())
+
+		r.Get("/totalByCondition", hdCustomer.GetTotalByCondition())
+
+		r.Get("/topActives", hdCustomer.GetTopActives())
+
 	})
 	a.router.Route("/products", func(r chi.Router) {
 		// - GET /products
@@ -113,6 +118,9 @@ func (a *ApplicationDefault) SetUp() (err error) {
 		r.Get("/", hdSale.GetAll())
 		// - POST /sales
 		r.Post("/", hdSale.Create())
+
+		r.Get("/topProducts", hdSale.GetTopFiveProducts())
+
 	})
 
 	return
